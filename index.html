@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Reusable Text-to-Speech Button Code from AIDL 2026 Symposium - Accessible and Inclusive Digital Library">
+  <meta name="keywords" content="text-to-speech, tts, accessibility, web accessibility, assistive technology, AIDL 2026, digital library, inclusive design">
+  <meta name="author" content="Arshad Abdul">
+  <title>Text-to-Speech Button - Reusable Code </title>
+  
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4FE0F9 0%, #1a73e8 100%);
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 1.1em;
+      opacity: 0.95;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .demo-section {
+      background: #f8f9fa;
+      border-left: 4px solid #4FE0F9;
+      padding: 25px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+    }
+
+    .demo-section h2 {
+      color: #1a73e8;
+      margin-bottom: 15px;
+    }
+
+    .demo-box {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      border: 2px dashed #4FE0F9;
+      margin-top: 15px;
+    }
+
+    .demo-box p {
+      margin: 10px 0;
+    }
+
+    .instructions {
+      margin: 30px 0;
+    }
+
+    .instructions h2 {
+      color: #333;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #4FE0F9;
+    }
+
+    .instructions ol {
+      margin-left: 20px;
+    }
+
+    .instructions li {
+      margin: 15px 0;
+      line-height: 1.8;
+    }
+
+    .code-section {
+      margin: 30px 0;
+    }
+
+    .code-section h3 {
+      color: #1a73e8;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .code-block {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .copy-button {
+      background: #4FE0F9;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .copy-button:hover {
+      background: #1a73e8;
+      transform: translateY(-2px);
+    }
+
+    .copy-button.copied {
+      background: #28a745;
+    }
+
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .note {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+
+    .note strong {
+      color: #856404;
+    }
+
+    /* THIS IS THE EXACT AIDL TTS BUTTON CSS */
+    .speaker-button {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #4FE0F9 0%, #1a73e8 100%);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(31, 115, 232, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 990;
+      padding: 0;
+    }
+
+    .speaker-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(31, 115, 232, 0.6);
+    }
+
+    .speaker-button:active {
+      transform: scale(0.95);
+    }
+
+    .speaker-button.active {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+      animation: pulse-glow 1.5s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(255, 107, 107, 1);
+      }
+    }
+
+    .feature-list {
+      background: #e8f4f8;
+      padding: 20px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+
+    .feature-list h3 {
+      color: #1a73e8;
+      margin-bottom: 15px;
+    }
+
+    .feature-list ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .feature-list li {
+      padding: 8px 0;
+      padding-left: 25px;
+      position: relative;
+    }
+
+    .feature-list li:before {
+      content: "✓";
+      color: #28a745;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.8em;
+      }
+      
+      .content {
+        padding: 20px;
+      }
+
+      .speaker-button {
+        top: 20px;
+        right: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- THIS IS THE EXACT AIDL TTS BUTTON (Live Demo) -->
+  <button class="speaker-button" id="speakerBtn" aria-label="Listen to page content">
+    <i class="fa fa-volume-up" aria-hidden="true"></i>
+  </button>
+
+  <div class="container">
+    <div class="header">
+      <h1>Text-to-Speech Hover Button</h1>
+      <p>Reusable Code </p>
+    </div>
+
+    <div class="content">
+      
+      <div class="demo-section">
+        <h2>🎤 Live Demo</h2>
+        <p><strong>Try it now!</strong> Click the blue speaker button (top right) to activate text-to-speech mode. Then hover your mouse over any text on this page to hear it read aloud.</p>
+        
+        <div class="demo-box">
+          <p><strong>Sample text to test:</strong></p>
+          <p>Welcome to the text-to-speech demonstration. This technology helps make websites more accessible.</p>
+          <p>Hover over this paragraph to hear it spoken aloud. Move your mouse to different elements to hear different content.</p>
+          <p><a href="#instructions">Click here to jump to instructions</a></p>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h3>Features</h3>
+        <ul>
+          <li>Hover-to-speak functionality for all text elements</li>
+          <li>Beautiful animated button with active state indication</li>
+          <li>Support for reading image alt text for accessibility</li>
+          <li>Clean on/off toggle mechanism</li>
+          <li>Works with Web Speech API (built into modern browsers)</li>
+          <li>No external dependencies required (except Font Awesome for icon)</li>
+        </ul>
+      </div>
+
+      <div class="instructions" id="instructions">
+        <h2>📋 How to Use This Code on Your Website</h2>
+        <ol>
+          <li><strong>Copy the HTML</strong> - Paste the button code before your closing <code>&lt;/body&gt;</code> tag</li>
+          <li><strong>Copy the CSS</strong> - Add the styles to your stylesheet or in a <code>&lt;style&gt;</code> tag</li>
+          <li><strong>Copy the JavaScript</strong> - Add the script at the bottom of your page before <code>&lt;/body&gt;</code></li>
+          <li><strong>Include Font Awesome</strong> - Add Font Awesome CDN link in your <code>&lt;head&gt;</code> section</li>
+        </ol>
+
+        <div class="note">
+          <strong>Note:</strong> This code uses the Web Speech API which is supported in most modern browsers (Chrome, Edge, Safari, Opera). Firefox has partial support.
+        </div>
+      </div>
+
+      <div class="code-section">
+        <h2>💻 Copy the Code</h2>
+
+        <div class="code-block">
+          <h3>
+            <span>Step 1: Font Awesome (Add to &lt;head&gt;)</span>
+            <button class="copy-button" onclick="copyCode('code1', this)">Copy</button>
+          </h3>
+          <pre><code id="code1">&lt;link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"&gt;</code></pre>
+        </div>
+
+        <div class="code-block">
+          <h3>
+            <span>Step 2: HTML Button (Add before &lt;/body&gt;)</span>
+            <button class="copy-button" onclick="copyCode('code2', this)">Copy</button>
+          </h3>
+          <pre><code id="code2">&lt;button class="speaker-button" id="speakerBtn" aria-label="Listen to page content"&gt;
+  &lt;i class="fa fa-volume-up" aria-hidden="true"&gt;&lt;/i&gt;
+&lt;/button&gt;</code></pre>
+        </div>
+
+        <div class="code-block">
+          <h3>
+            <span>Step 3: CSS Styles</span>
+            <button class="copy-button" onclick="copyCode('code3', this)">Copy</button>
+          </h3>
+          <pre><code id="code3">.speaker-button {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #4FE0F9 0%, #1a73e8 100%);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(31, 115, 232, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 990;
+  padding: 0;
+}
+
+.speaker-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(31, 115, 232, 0.6);
+}
+
+.speaker-button:active {
+  transform: scale(0.95);
+}
+
+.speaker-button.active {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+  animation: pulse-glow 1.5s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 107, 107, 1);
+  }
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+          <h3>
+            <span>Step 4: JavaScript (Add before &lt;/body&gt;)</span>
+            <button class="copy-button" onclick="copyCode('code4', this)">Copy</button>
+          </h3>
+          <pre><code id="code4">&lt;script&gt;
+  // Speaker Button - Toggle Text-to-Speech on Hover Mode
+  let speakModeActive = false;
+  const speakerBtn = document.getElementById('speakerBtn');
+  
+  // Click button to toggle speak mode
+  speakerBtn.addEventListener('click', function() {
+    speakModeActive = !speakModeActive;
+    
+    if (speakModeActive) {
+      this.classList.add('active');
+      this.title = 'Speak mode ON - Hover over elements to hear them';
+    } else {
+      this.classList.remove('active');
+      this.title = 'Click to enable speak mode';
+      speechSynthesis.cancel();
+    }
+  });
+  
+  // Add hover listeners to all elements on the page
+  document.addEventListener('mouseover', function(e) {
+    if (speakModeActive && e.target !== speakerBtn && !e.target.closest('.speaker-button')) {
+      let textContent = '';
+      
+      // Check if it's an image and has alt text
+      if (e.target.tagName === 'IMG' && e.target.alt) {
+        textContent = e.target.alt;
+      } else {
+        // Otherwise get text content
+        textContent = e.target.innerText || e.target.textContent;
+      }
+      
+      if (textContent && textContent.trim().length > 0) {
+        speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(textContent.trim());
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        speechSynthesis.speak(utterance);
+      }
+    }
+  });
+&lt;/script&gt;</code></pre>
+        </div>
+
+        <div class="code-block">
+          <h3>
+            <span>Complete Example (All-in-One)</span>
+            <button class="copy-button" onclick="copyCode('code5', this)">Copy</button>
+          </h3>
+          <pre><code id="code5">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Text-to-Speech Example&lt;/title&gt;
+  
+  &lt;!-- Font Awesome --&gt;
+  &lt;link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"&gt;
+  
+  &lt;style&gt;
+    .speaker-button {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #4FE0F9 0%, #1a73e8 100%);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(31, 115, 232, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 990;
+      padding: 0;
+    }
+
+    .speaker-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(31, 115, 232, 0.6);
+    }
+
+    .speaker-button:active {
+      transform: scale(0.95);
+    }
+
+    .speaker-button.active {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+      animation: pulse-glow 1.5s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(255, 107, 107, 1);
+      }
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Your Page Content&lt;/h1&gt;
+  &lt;p&gt;Click the speaker button and hover over text to hear it!&lt;/p&gt;
+
+  &lt;!-- TTS Button --&gt;
+  &lt;button class="speaker-button" id="speakerBtn" aria-label="Listen to page content"&gt;
+    &lt;i class="fa fa-volume-up" aria-hidden="true"&gt;&lt;/i&gt;
+  &lt;/button&gt;
+
+  &lt;script&gt;
+    // Speaker Button - Toggle Text-to-Speech on Hover Mode
+    let speakModeActive = false;
+    const speakerBtn = document.getElementById('speakerBtn');
+    
+    // Click button to toggle speak mode
+    speakerBtn.addEventListener('click', function() {
+      speakModeActive = !speakModeActive;
+      
+      if (speakModeActive) {
+        this.classList.add('active');
+        this.title = 'Speak mode ON - Hover over elements to hear them';
+      } else {
+        this.classList.remove('active');
+        this.title = 'Click to enable speak mode';
+        speechSynthesis.cancel();
+      }
+    });
+    
+    // Add hover listeners to all elements on the page
+    document.addEventListener('mouseover', function(e) {
+      if (speakModeActive && e.target !== speakerBtn && !e.target.closest('.speaker-button')) {
+        let textContent = '';
+        
+        // Check if it's an image and has alt text
+        if (e.target.tagName === 'IMG' && e.target.alt) {
+          textContent = e.target.alt;
+        } else {
+          // Otherwise get text content
+          textContent = e.target.innerText || e.target.textContent;
+        }
+        
+        if (textContent && textContent.trim().length > 0) {
+          speechSynthesis.cancel();
+          
+          const utterance = new SpeechSynthesisUtterance(textContent.trim());
+          utterance.rate = 1.0;
+          utterance.pitch = 1.0;
+          utterance.volume = 1.0;
+          
+          speechSynthesis.speak(utterance);
+        }
+      }
+    });
+  &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+
+      </div>
+
+      <div class="note">
+        <strong>Customization Tips:</strong>
+        <ul style="margin-top: 10px;">
+          <li>Change <code>top: 80px;</code> to adjust vertical position</li>
+          <li>Change <code>right: 20px;</code> to adjust horizontal position</li>
+          <li>Modify colors in the gradient to match your site theme</li>
+          <li>Adjust <code>utterance.rate</code> (0.1-10) for speech speed</li>
+          <li>Adjust <code>utterance.pitch</code> (0-2) for voice pitch</li>
+        </ul>
+      </div>
+
+      <div class="demo-section" style="margin-top: 30px;">
+        <h2>🌐 Browser Support</h2>
+        <p><strong>Excellent Support:</strong> Chrome, Edge, Safari, Opera</p>
+        <p><strong>Partial Support:</strong> Firefox (limited voices)</p>
+        <p><strong>Mobile:</strong> Works on iOS Safari and Chrome for Android</p>
+      </div>
+
+      <div style="text-align: center; padding: 30px; background: #f8f9fa; margin-top: 30px; border-radius: 5px;">
+       <p>Developed by Arshad Abdul, Library Assistant - IIT Hyderabad</p>
+       <p>&copy; Arshad Abdul</p>
+       <p>Connect on Github: <a href="https://github.com/Arshad-Abdul" target="_blank" rel="noopener noreferrer"><i class="fa fa-github"></i></a></p>
+       <p>Connect on LinkedIn: <a href="https://www.linkedin.com/in/arshad-abdul-6a3807253/" target="_blank" rel="noopener noreferrer"><i class="fa fa-linkedin"></i></a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- THIS IS THE EXACT AIDL TTS JAVASCRIPT (Live Demo) -->
+  <script>
+    // Speaker Button - Toggle Text-to-Speech on Hover Mode
+    let speakModeActive = false;
+    const speakerBtn = document.getElementById('speakerBtn');
+    
+    // Click button to toggle speak mode
+    speakerBtn.addEventListener('click', function() {
+      speakModeActive = !speakModeActive;
+      
+      if (speakModeActive) {
+        this.classList.add('active');
+        this.title = 'Speak mode ON - Hover over elements to hear them';
+      } else {
+        this.classList.remove('active');
+        this.title = 'Click to enable speak mode';
+        speechSynthesis.cancel();
+      }
+    });
+    
+    // Add hover listeners to all elements on the page
+    document.addEventListener('mouseover', function(e) {
+      if (speakModeActive && e.target !== speakerBtn && !e.target.closest('.speaker-button')) {
+        let textContent = '';
+        
+        // Check if it's an image and has alt text
+        if (e.target.tagName === 'IMG' && e.target.alt) {
+          textContent = e.target.alt;
+        } else {
+          // Otherwise get text content
+          textContent = e.target.innerText || e.target.textContent;
+        }
+        
+        if (textContent && textContent.trim().length > 0) {
+          speechSynthesis.cancel();
+          
+          const utterance = new SpeechSynthesisUtterance(textContent.trim());
+          utterance.rate = 1.0;
+          utterance.pitch = 1.0;
+          utterance.volume = 1.0;
+          
+          speechSynthesis.speak(utterance);
+        }
+      }
+    });
+
+    // Copy to clipboard function
+    function copyCode(elementId, button) {
+      const codeElement = document.getElementById(elementId);
+      const text = codeElement.textContent;
+      
+      navigator.clipboard.writeText(text).then(function() {
+        button.textContent = '✓ Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(function() {
+          button.textContent = 'Copy';
+          button.classList.remove('copied');
+        }, 2000);
+      }).catch(function(err) {
+        alert('Failed to copy. Please select and copy manually.');
+      });
+    }
+  </script>
+
+</body>
+</html>
